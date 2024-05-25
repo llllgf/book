@@ -8,9 +8,12 @@ urlpatterns = [
     path('feedback/', feedback, name='feedback'),
     path('home/', home, name='manager_index'),
     path('reply/', reply, name='reply'),
-    path('grade_list/', grade_list),
+    path('grade_all/<int:page>', grade_all),
     path('grade_about/<int:id>', grade_about),
     path('students_all/<int:page>', students_all),
     path('add_student/', add_student),
     path('edit_student/<int:id>', edit_student),
+    path('add_grade/', add_grade),
+    path('book_all/<int:page>', book_all),
+    path('add_book/', add_book),
 ]

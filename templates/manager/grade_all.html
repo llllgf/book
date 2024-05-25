@@ -62,45 +62,29 @@
         }
     </style>
 
-    <div>
-        <button id="addClassBtn">添加学生</button>
-        <div id="classList">班级列表界面</div>
-    </div>
-
-    <div id="addClassModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>添加班级</h2>
-            <form id="addClassForm">
-                <label for="className">班级名称:</label>
-                <input type="text" id="className" name="className" required>
-                <button type="submit">保存</button>
-            </form>
-        </div>
-    </div>
+    <a class="nav-link" href="../add_grade">添加班级</a>
     <table style="width:100%; border-collapse: collapse; background-color: #f9f9f9;">
         <thead>
         <tr style="background-color: #007bff; color: #fff;">
-            <th style="border: 1px solid #ddd; padding: 12px;">学生</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">学号</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">账号</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">班级</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">专业</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">人数</th>
             <th style="border: 1px solid #ddd; padding: 12px;">备注</th>
         </tr>
         </thead>
         <tbody>
-        {% for student in students %}
+        {% for grade in grades %}
             <tr>
-                    <td style="border: 1px solid #ddd; padding: 12px;">
-                        <a class="nav-link" href="../edit_student/{{ student.id }}">{{ student.name }}</a>
-                    </td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.student_id }}</td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.account }}</td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.notice }}</td>
-
+                <td style="border: 1px solid #ddd; padding: 12px;">
+                    <a class="nav-link" href="/manager/grade_about/{{ grade.id }}">{{ grade.name }}</a>
+                </td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.major }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.nums }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.notice }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-
+    <a class="nav-link" href="./{{ l }}?{{ request.GET.urlencode }}">上一页</a>
+    <a class="nav-link" href="./{{ r }}?{{ request.GET.urlencode }}">下一页</a>
 {% endblock %}

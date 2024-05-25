@@ -1,11 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 
-from books.models import Grade, Student
+from books.models import Grade, Student, Major, Books
 from manager.plug import getFeedbackList, managerRender, getFeedbackOrder, getFeedbackById
 from util.check_staff import check_staff
 
@@ -60,11 +59,17 @@ def reply(request):
 @login_required(login_url='/login')
 @check_staff
 @csrf_protect
-def grade_list(request):
+def grade_all(request, page):
     grades = Grade.objects.all()
     for i in range(len(grades)):
         grades[i].nums = len(Student.objects.filter(grade=grades[i]))
-    return managerRender(request, 'grade_list.html', {"grades": grades})
+
+    paginator = Paginator(grades, 10)
+    l = page - 1 if page - 1 > 0 else 1
+    r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    return managerRender(request, 'grade_all.html', {"grades": paginator.get_page(page),
+                                                     'l': l,
+                                                     'r': r})
 
 
 @login_required(login_url='/login')
@@ -88,7 +93,7 @@ def students_all(request, page):
             students = Student.objects.filter(student_id__contains=search)
         else:
             students = Student.objects.all()
-        if search == '' :
+        if search == '':
             students = Student.objects.all()
     except:
         students = Student.objects.all()
@@ -119,6 +124,20 @@ def add_student(request):
 @login_required(login_url='/login')
 @check_staff
 @csrf_protect
+def add_grade(request):
+    if request.method == 'POST':
+        grade = Grade()
+        grade.name = request.POST.get('name')
+        grade.major_id = request.POST.get('major')
+        grade.save()
+        return redirect('/manager/grade_all/1')
+    major_list = Major.objects.all()
+    return managerRender(request, 'add_grade.html', {'major_list': major_list})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
 def edit_student(request, id):
     if request.method == 'POST':
         student = Student.objects.get(id=id)
@@ -132,3 +151,31 @@ def edit_student(request, id):
     grade_list = Grade.objects.all()
     return managerRender(request, 'edit_student.html', {'student': student,
                                                         'grade_list': grade_list})
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def book_all(request, page):
+    books = Books.objects.all()
+    paginator = Paginator(books, 10)
+    l = page - 1 if page - 1 > 0 else 1
+    r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    return managerRender(request, 'book_all.html', {"books": paginator.get_page(page),
+                                                     'l': l,
+                                                     'r': r})
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def add_book(request):
+    if request.method == 'POST':
+        book = Books()
+        book.name = request.POST.get('name')
+        book.publish = request.POST.get('publish')
+        book.author = request.POST.get('author')
+        book.price = request.POST.get('price')
+        book.ISBN = request.POST.get('isbn')
+        book.notice = request.POST.get('notice')
+        book.save()
+        return redirect('/manager/book_all/1')
+    return managerRender(request, 'add_book.html')
