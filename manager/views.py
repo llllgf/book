@@ -223,4 +223,5 @@ def edit_book(request, id):
         book.save()
         return redirect('/manager/book_all/1')
     book = Books.objects.get(id=id)
+
     return managerRender(request, 'edit_book.html', {'book': book})
