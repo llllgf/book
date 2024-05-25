@@ -61,7 +61,16 @@
             cursor: pointer;
         }
     </style>
+    <form method="get">
 
+        <label for="search_type">搜索方式:</label>
+        <select id="search_type" name="search_type">
+            <option value="name">名称</option>
+        </select>
+        <label for="search"></label>
+        <input type="text" id="search" name="search" required>
+        <input type="submit" value="搜索">
+    </form>
     <a class="nav-link" href="../add_grade">添加班级</a>
     <table style="width:100%; border-collapse: collapse; background-color: #f9f9f9;">
         <thead>

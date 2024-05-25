@@ -1,0 +1,76 @@
+{% extends 'manager_left.html' %}
+{% block right %}
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3ba1df;
+            color: #fff;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"], input[type="submit"] {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            width: 85px;
+            background-color: #3ba1df;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 132px);
+        }
+
+        .Price {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+    </style>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ book.id }}">
+        <label for="name">教材名称:</label>
+        <input type="text" id="name" name="name" value="{{ book.name }}" required>
+        <br>
+        <label for="author">作者:</label>
+        <input type="text" id="author" name="author" value="{{ book.author }}" required>
+        <br>
+        <label for="publish">出版社:</label>
+        <input type="text" id="publish" name="publish" value="{{ book.publish }}" required>
+        <br>
+        <label for="price">价格 单位:分:</label>
+        <input type="text" id="price" name="price" value="{{ book.price }}" required>
+        <br>
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" value="{{ book.ISBN }}" required>
+        <br>
+        <label for="notice">备注:</label>
+        <input type="text" id="notice" name="notice" value="{{ book.notice }}">
+        <input type="submit" value="提交">
+    </form>
+{% endblock %}

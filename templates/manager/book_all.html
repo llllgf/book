@@ -65,8 +65,10 @@
 
         <label for="search_type">搜索方式:</label>
         <select id="search_type" name="search_type">
-            <option value="name">姓名</option>
-            <option value="id">学号</option>
+            <option value="name">名称</option>
+            <option value="publish">出版社</option>
+            <option value="author">作者</option>
+            <option value="isbn">ISBN</option>
         </select>
         <label for="search"></label>
         <input type="text" id="search" name="search" required>
@@ -88,7 +90,9 @@
             <tbody>
             {% for book in books %}
                 <tr>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ book.name }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">
+                        <a class="nav-link" href="../edit_book/{{ book.id }}">{{ book.name }}</a>
+                    </td>
                     <td style="border: 1px solid #ddd; padding: 12px;">{{ book.publish }}</td>
                     <td style="border: 1px solid #ddd; padding: 12px;">{{ book.author }}</td>
                     <td style="border: 1px solid #ddd; padding: 12px;">{{ book.price }}</td>

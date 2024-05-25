@@ -60,10 +60,19 @@ def reply(request):
 @check_staff
 @csrf_protect
 def grade_all(request, page):
-    grades = Grade.objects.all()
+    try:
+        search_type = request.GET.get('search_type')
+        search = request.GET.get('search')
+        if search_type == 'name':
+            grades = Grade.objects.filter(name__contains=search)
+        else:
+            grades = Grade.objects.all()
+        if search == '':
+            grades = Grade.objects.all()
+    except:
+        grades = Grade.objects.all()
     for i in range(len(grades)):
         grades[i].nums = len(Student.objects.filter(grade=grades[i]))
-
     paginator = Paginator(grades, 10)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
@@ -152,17 +161,35 @@ def edit_student(request, id):
     return managerRender(request, 'edit_student.html', {'student': student,
                                                         'grade_list': grade_list})
 
+
 @login_required(login_url='/login')
 @check_staff
 @csrf_protect
 def book_all(request, page):
-    books = Books.objects.all()
+    try:
+        search_type = request.GET.get('search_type')
+        search = request.GET.get('search')
+        if search_type == 'name':
+            books = Books.objects.filter(name__contains=search)
+        elif search_type == 'author':
+            books = Books.objects.filter(author__contains=search)
+        elif search_type == 'publish':
+            books = Books.objects.filter(publish__contains=search)
+        elif search_type == 'isbn':
+            books = Books.objects.filter(ISBN__contains=search)
+        else:
+            books = Books.objects.all()
+        if search == '':
+            books = Books.objects.all()
+    except:
+        books = Books.objects.all()
     paginator = Paginator(books, 10)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
     return managerRender(request, 'book_all.html', {"books": paginator.get_page(page),
-                                                     'l': l,
-                                                     'r': r})
+                                                    'l': l,
+                                                    'r': r})
+
 
 @login_required(login_url='/login')
 @check_staff
@@ -179,3 +206,21 @@ def add_book(request):
         book.save()
         return redirect('/manager/book_all/1')
     return managerRender(request, 'add_book.html')
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def edit_book(request, id):
+    if request.method == 'POST':
+        book = Books.objects.get(id=id)
+        book.name = request.POST.get('name')
+        book.publish = request.POST.get('publish')
+        book.author = request.POST.get('author')
+        book.price = request.POST.get('price')
+        book.ISBN = request.POST.get('isbn')
+        book.notice = request.POST.get('notice')
+        book.save()
+        return redirect('/manager/book_all/1')
+    book = Books.objects.get(id=id)
+    return managerRender(request, 'edit_book.html', {'book': book})

@@ -16,4 +16,5 @@ urlpatterns = [
     path('add_grade/', add_grade),
     path('book_all/<int:page>', book_all),
     path('add_book/', add_book),
+    path('edit_book/<int:id>', edit_book),
 ]
