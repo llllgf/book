@@ -10,4 +10,5 @@ urlpatterns = [
     path('feedback/', feedback, name='feedback'),
     path('home/', home, name='manager_index'),
     path('reply/', reply, name='reply'),
+    path('class_list',class_list)
 ]

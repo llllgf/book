@@ -52,3 +52,9 @@ def reply(request):
                              'feedback': getFeedbackById(request.GET.get('id'))
                          }
                          )
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def class_list(request):
+    return managerRender(request,'class_list.html')
