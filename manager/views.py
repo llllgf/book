@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 
-from books.models import Grade
+from books.models import Grade, Student
 from manager.plug import getFeedbackList, managerRender, getFeedbackOrder, getFeedbackById
 from util.check_staff import check_staff
 
@@ -54,9 +56,79 @@ def reply(request):
                          }
                          )
 
+
 @login_required(login_url='/login')
 @check_staff
 @csrf_protect
 def grade_list(request):
-    grades=Grade.objects.all()
-    return managerRender(request,'grade_list.html',{"grades":grades})
+    grades = Grade.objects.all()
+    for i in range(len(grades)):
+        grades[i].nums = len(Student.objects.filter(grade=grades[i]))
+    return managerRender(request, 'grade_list.html', {"grades": grades})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def grade_about(request, id):
+    students = Student.objects.filter(grade_id=id)
+    return managerRender(request, 'grade_about.html', {'students': students})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def students_all(request, page):
+    try:
+        search_type = request.GET.get('search_type')
+        search = request.GET.get('search')
+        if search_type == 'name':
+            students = Student.objects.filter(name__contains=search)
+        elif search_type == 'id':
+            students = Student.objects.filter(student_id__contains=search)
+        else:
+            students = Student.objects.all()
+        if search == '' :
+            students = Student.objects.all()
+    except:
+        students = Student.objects.all()
+    paginator = Paginator(students, 10)
+    l = page - 1 if page - 1 > 0 else 1
+    r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    return managerRender(request, 'students_all.html', {'students': paginator.get_page(page),
+                                                        'l': l,
+                                                        'r': r})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def add_student(request):
+    if request.method == 'POST':
+        student = Student()
+        student.name = request.POST.get('name')
+        student.student_id = request.POST.get('student_id')
+        student.grade_id = request.POST.get('grade')
+        student.notice = request.POST.get('notice')
+        student.save()
+        return redirect('/manager/students_all/1')
+    grade_list = Grade.objects.all()
+    return managerRender(request, 'add_student.html', {'grade_list': grade_list})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def edit_student(request, id):
+    if request.method == 'POST':
+        student = Student.objects.get(id=id)
+        student.name = request.POST.get('name')
+        student.student_id = request.POST.get('student_id')
+        student.grade_id = request.POST.get('grade')
+        student.notice = request.POST.get('notice')
+        student.save()
+        return redirect('/manager/students_all/1')
+    student = Student.objects.get(id=id)
+    grade_list = Grade.objects.all()
+    return managerRender(request, 'edit_student.html', {'student': student,
+                                                        'grade_list': grade_list})

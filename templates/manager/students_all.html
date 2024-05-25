@@ -1,0 +1,103 @@
+{% extends 'manager_left.html' %}
+{% block right %}
+    <style>
+        .feedback {
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback hr {
+            margin-top: 10px;
+            border: none;
+            height: 1px;
+            background-color: #eee;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <form method="get">
+
+        <label for="search_type">搜索方式:</label>
+        <select id="search_type" name="search_type">
+            <option value="name">姓名</option>
+            <option value="id">学号</option>
+        </select>
+        <label for="search"></label>
+        <input type="text" id="search" name="search" required>
+        <input type="submit" value="搜索">
+    </form>
+    <a class="nav-link" href="../add_student">添加学生</a>
+
+    <table style="width:100%; border-collapse: collapse; background-color: #f9f9f9;">
+        <thead>
+        <tr style="background-color: #007bff; color: #fff;">
+            <th style="border: 1px solid #ddd; padding: 12px;">学生</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">学号</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">班级</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 12px;">
+                    <a class="nav-link" href="../edit_student/{{ student.id }}">{{ student.name }}</a>
+                </td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ student.student_id }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ student.grade }}</td>
+                <td style="border: 1px solid #ddd; padding: 12px;">{{ student.notice }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class="nav-link" href="./{{ l }}?{{ request.GET.urlencode }}">上一页</a>
+    <a class="nav-link" href="./{{ r }}?{{ request.GET.urlencode }}">下一页</a>
+
+{% endblock %}

@@ -63,7 +63,7 @@
     </style>
 
     <div>
-        <button id="addClassBtn">添加班级</button>
+        <button id="addClassBtn">添加学生</button>
         <div id="classList">班级列表界面</div>
     </div>
 
@@ -81,53 +81,26 @@
     <table style="width:100%; border-collapse: collapse; background-color: #f9f9f9;">
         <thead>
         <tr style="background-color: #007bff; color: #fff;">
-            <th style="border: 1px solid #ddd; padding: 12px;">班级</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">专业</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">人数</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">学生</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">学号</th>
+            <th style="border: 1px solid #ddd; padding: 12px;">账号</th>
             <th style="border: 1px solid #ddd; padding: 12px;">备注</th>
         </tr>
         </thead>
         <tbody>
-        {% for grade in grades %}
+        {% for student in students %}
             <tr>
                     <td style="border: 1px solid #ddd; padding: 12px;">
-                        <a class="nav-link" href="/manager/grade_about/{{ grade.id }}">{{ grade.name }}</a>
+                        {{ student.name }}
                     </td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.major }}</td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.nums }}</td>
-                    <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.notice }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.student_id }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.account }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ student.notice }}</td>
 
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <script>
-        document.getElementById('addClassBtn').onclick = function () {
-            document.getElementById('addClassModal').style.display = "block";
-        }
 
-        document.getElementsByClassName('close')[0].onclick = function () {
-            document.getElementById('addClassModal').style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            if (event.target == document.getElementById('addClassModal')) {
-                document.getElementById('addClassModal').style.display = "none";
-            }
-        }
-
-        document.getElementById('addClassForm').onsubmit = function (event) {
-            event.preventDefault();
-            var className = document.getElementById('className').value;
-            if (className) {
-                var classList = document.getElementById('classList');
-                var newClassDiv = document.createElement('div');
-                newClassDiv.className = 'feedback';
-                newClassDiv.innerText = '班级名称: ' + className;
-                classList.appendChild(newClassDiv);
-                document.getElementById('addClassModal').style.display = "none";
-            }
-        }
-    </script>
 
 {% endblock %}
