@@ -1,0 +1,109 @@
+{% extends 'user_left.html' %}
+{% block right %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #3ba1df;
+        color: #fff;
+    }
+    .feedback {
+        margin-top: 20px;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .feedback-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .feedback-item:last-child {
+        border-bottom: none;
+    }
+    form {
+        margin-top: 20px;
+    }
+    input[type="text"], input[type="submit"] {
+        padding: 10px;
+        margin-right: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+        width: 85px;
+        background-color: #3ba1df;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+    }
+    input[type="text"] {
+        width: calc(100% - 132px);
+    }
+
+    .Price {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+</style>
+<div>
+    <div class="Price">
+        <table>
+            <thead>
+                <tr>
+                    <th>教材名称</th>
+                    <th>出版社</th>
+                    <th>作者</th>
+                    <th>价格 单位:分</th>
+                    <th>ISBN</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.book.name }}</td>
+                    <td>{{ book.book.publish }}</td>
+                    <td>{{ book.book.author }}</td>
+                    <td>{{ book.book.price }}</td>
+                    <td>{{ book.book.ISBN }}</td>
+                    <td>{{ book.notice }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+            <p style="font-size: 18px; font-weight: bold;">总价: {{ price }}</p>
+    </div>
+
+    <div class="feedback">
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" id="name" name="content" required>
+            <input type="hidden" name="semester" value="{{ semester }}">
+            <input type="submit" value="提交">
+        </form>
+        {% for item in feedback %}
+            <div class="feedback-item">
+                反馈内容: {{ item.content }}<br>
+                反馈时间: {{ item.time }}<br>
+                回复内容: {{ item.msg|default:'暂无回复' }}<br>
+                回复时间: {{ item.msg_time|default:'暂无回复' }}
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

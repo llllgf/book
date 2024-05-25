@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <style>
+        body{
+         overflow: hidden;
+        }
+
+        #f {
+        position:absolute;
+        left:40%;
+        top:20%;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            height:260px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        form p {
+
+            margin-bottom: 15px;
+        }
+
+        form input[type="text"],
+        form input[type="password"] {
+            width: 210px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        form input[type="submit"] {
+            position:absolute;
+            left:54%;
+            top:60%;
+            width: 28%;
+            padding: 10px;
+            background-color: #3ba1df;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+        .error-message {
+            position:absolute;
+            left:31%;
+            top:72%;
+            color: #ff0000;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .activation {
+            position:absolute;
+            left:18%;
+            top:60%;
+            width: 28%;
+            padding: 10px;
+            background-color: #3ba1df;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="particles-js"></div>
+<div id="f">
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2 style="text-align: center;">登录</h2>
+        <p><input type="text" name="account" placeholder="账号"></p>
+        <p><input type="password" name="password" placeholder="密码"></p>
+        <input type="submit" value="登录">
+        <p class="error-message">{{ error_message }}</p>
+    </form>
+        <input type="submit" class="activation" value="激活账号" onclick="redirectToPage()"/>
+</div>
+
+</body>
+
+<!-- 引入particles.js库 -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<!-- 初始化粒子效果 -->
+<script>
+    function redirectToPage() {
+        // 在这里设置要跳转到的页面的 URL
+        var url = "/activate";
+        // 使用 window.location.href 跳转到指定的页面
+        window.location.href = url;
+    };
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#00BFFF"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#00BFFF"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": false,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#00BFFF",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 6,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 6,
+                    "rotateY": 120
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+</script>
+
+</html>

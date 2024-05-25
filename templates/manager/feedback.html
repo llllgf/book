@@ -1,0 +1,41 @@
+{% extends 'manager_left.html' %}
+{% block right %}
+<style>
+    .feedback {
+        background-color: #ffffff;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .feedback hr {
+        margin-top: 10px;
+        border: none;
+        height: 1px;
+        background-color: #eee;
+    }
+    a {
+        color: #007bff;
+        text-decoration: none;
+
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+{% for feedback in feedbacks %}
+
+<div class="feedback">
+    <p>反馈位置：{{ feedback.tabel }}</p>
+    <p>反馈内容：{{ feedback.content }}</p>
+    <p>反馈时间：{{ feedback.time }}</p>
+    <p>回复内容：{{ feedback.msg|default:'暂无回复' }}</p>
+    <p>回复时间：{{ feedback.msg_time|default:'暂无回复时间' }}</p>
+     {% if not feedback.msg %}
+            <a href="../reply?id={{ feedback.id }}">回复</a>
+        {% endif %}
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}

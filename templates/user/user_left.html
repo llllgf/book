@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}
+
+{% endblock %}
+{% block content %}
+<style>
+    .nav-item {
+        margin-bottom: 0;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .nav-link {
+        color: #555;
+        font-size: 16px;
+        transition: color 0.3s ease;
+        padding: 12px 15px;
+        display: block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .nav-link:hover, .nav-link:focus {
+        color: #0056b3;
+        text-decoration: none;
+        background-color: #e9ecef;
+    }
+
+    .nav-link.active {
+
+    }
+
+    .left {
+        position: fixed;
+        top:10%;
+        height:100%;
+        width: 15%;
+        overflow-y: auto;
+        padding: 20px;
+        border-right: 2px solid #ccc;
+        background-color: #fff;
+    }
+
+    .right {
+        position: relative;
+        top:60px;
+        left:19%;
+        width: 80%;
+        overflow-y: auto;
+    }
+
+    .row {
+        display: flex;
+        height: 90vh;
+    }
+</style>
+<div class="row">
+    <div class="left">
+        <ul class="nav flex-column" style="list-style: none; padding: 0;">
+            <li class="nav-item">
+                <a class="nav-link active" href="/user/home">首页</a>
+            </li>
+            {% for semester in semesters %}
+            <li class="nav-item">
+                <a class="nav-link" href="/user/book_table?semester={{ semester.name }}">{{ semester.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="right">
+        {% block right %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

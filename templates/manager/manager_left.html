@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title%}
+
+{% endblock %}
+{% block content %}
+<style>
+    .nav-item {
+        margin-bottom: 0;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+
+    .nav-link {
+        color: #555;
+        font-size: 16px;
+        transition: color 0.3s ease;
+        padding: 12px 15px;
+        display: block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .nav-link:hover, .nav-link:focus {
+        color: #0056b3;
+        text-decoration: none;
+        background-color: #e9ecef;
+    }
+
+    .nav-link.active {
+    }
+
+    .left {
+        position: fixed;
+        top:10%;
+        height:100%;
+        width: 15%;
+        overflow-y: auto;
+        padding: 20px;
+        border-right: 2px solid #ccc;
+        background-color: #fff;
+    }
+
+    .right {
+        position: relative;
+        top:90px;
+        left:18%;
+        width: 81.5%;
+        overflow-y: auto;
+    }
+
+    .row {
+        display: flex;
+        height: 90vh;
+    }
+
+
+</style>
+<div class="row">
+    <div class="left">
+        <ul class="nav flex-column" style="list-style: none; padding: 0;">
+            <li class="nav-item" style="border-bottom: 1px solid #ddd;">
+                <a class="nav-link active" href="/manager/home">首页</a>
+            </li>
+            <li class="nav-item" style="border-bottom: 1px solid #ddd;">
+                <a class="nav-link" href="/manager/feedback">处理反馈</a>
+            </li>
+
+
+        </ul>
+    </div>
+
+    <div class="right">
+
+        {% block right %}
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}
+
+
