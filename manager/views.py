@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 
+from books.models import Grade
 from manager.plug import getFeedbackList, managerRender, getFeedbackOrder, getFeedbackById
 from util.check_staff import check_staff
 
@@ -56,5 +57,6 @@ def reply(request):
 @login_required(login_url='/login')
 @check_staff
 @csrf_protect
-def class_list(request):
-    return managerRender(request,'class_list.html')
+def grade_list(request):
+    grades=Grade.objects.all()
+    return managerRender(request,'grade_list.html',{"grades":grades})

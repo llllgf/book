@@ -71,7 +71,9 @@
         </form>
     </div>
 </div>
-
+{% for grade in grades %}
+     {{ grade.name }}      {{ grade.major }} <br>
+{% endfor %}
 <script>
     document.getElementById('addClassBtn').onclick = function() {
         document.getElementById('addClassModal').style.display = "block";
