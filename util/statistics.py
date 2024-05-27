@@ -1,4 +1,7 @@
-from books.models import Grade
+from xlsxwriter import Workbook
+
+from book.settings import TEMP_PATH
+from books.models import Grade,  Order
 
 
 class Grade_Statistics:
@@ -6,6 +9,7 @@ class Grade_Statistics:
         self.grade = Grade.objects.get(id=grade)
         self.students = self.grade.student_set.all()
         self.semester = semester
+
     def get_students(self):
         return self.students
 
@@ -40,13 +44,34 @@ class Grade_Statistics:
             price += book.price
         return price * self.get_students_count() / 100
 
-    def csv(self):
-        import csv
-        import os
-        books = self.get_books()
-        with open(f"{os.getcwd()}/books.csv", "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["书名", "价格", "出版社", "作者", "ISBN"])
-            for book in books:
-                writer.writerow([book.name, book.price, book.publish, book.author, book.ISBN])
-        return f"{os.getcwd()}/books.csv"
+
+    def excel_sheet(self, workbook:Workbook,name, orders: list[Order]):
+        ll=["书名", "单价（元）", "作者","数量","总价（元）"]
+        sheet=workbook.add_worksheet(name)
+        for i,title in enumerate(ll):
+            sheet.write(0,i,title)
+        for i,order in enumerate(orders):
+            i+=1
+            book=order.book
+            sheet.write(i,0,book.name)
+            sheet.write(i,1,book.price/100)
+            sheet.write(i,2,book.author)
+            sheet.write(i,3,self.get_students_count())
+            sheet.write(i,4,f"=B{i+1}*D{i+1}")
+        sheet.write(len(orders)+1,4,f"=SUM(E2:E{len(orders)+1})")
+
+
+
+    def excel(self):
+        path = f"{TEMP_PATH}/{self.grade.name}.xlsx"
+        workbook =Workbook(path)
+        orders=[]
+        semesters = self.get_semester_order()
+        for semester in semesters:
+            order=semester.order_set.all()
+            orders.extend(order)
+            self.excel_sheet(workbook,semester.name,order)
+        self.excel_sheet(workbook,"总览",orders)
+        workbook.close()
+        return path
+

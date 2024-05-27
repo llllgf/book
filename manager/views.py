@@ -273,8 +273,8 @@ def export(request, page):
 @check_staff
 @csrf_protect
 def export_grade(request):
-    grade = Grade_Statistics(int(request.GET.get('semester', 1)), request.GET.get('semester', "0"))
-    return managerRender(request, 'export_grade.html', {'data': grade})
+    grade = Grade_Statistics(int(request.GET.get('id')), request.GET.get('semester', "0"))
+    return managerRender(request, 'export_grade.html', {'data': grade, 'id': int(request.GET.get('id', 1))})
 
 
 @login_required(login_url='/login')
@@ -282,4 +282,5 @@ def export_grade(request):
 @csrf_protect
 def export_download(request):
     grade = Grade_Statistics(int(request.GET.get('semester', 1)))
-    return FileResponse(open(grade.csv(),"rb+"), as_attachment=True, filename='books.csv')
+    path = grade.excel()
+    return FileResponse(open(path, "rb+"), as_attachment=True, filename=path.split("/")[-1])

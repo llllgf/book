@@ -161,11 +161,13 @@
     <div class="container">
         <form method="get">
             <input type="hidden" name="semester" value="0">
+            <input type="hidden" name="id" value="{{ id }}">
             <input type="submit" value="总览">
         </form>
         {% for semester_order in data.get_semester_order %}
             <form method="get">
                 <input type="hidden" name="semester" value="{{ semester_order.id }}">
+                <input type="hidden" name="id" value="{{ id }}">
                 <input type="submit" value="{{ semester_order.name }}">
             </form>
         {% endfor %}
@@ -174,24 +176,18 @@
             <thead>
             <tr>
                 <th>教材名称</th>
-                <th>出版社</th>
                 <th>作者</th>
                 <th>价格 单位:分</th>
-                <th>ISBN</th>
                 <th>数量</th>
-                <th>备注</th>
             </tr>
             </thead>
             <tbody>
             {% for book in data.get_books %}
                 <tr>
                     <td>{{ book.name }}</td>
-                    <td>{{ book.publish }}</td>
                     <td>{{ book.author }}</td>
                     <td>{{ book.price }}</td>
-                    <td>{{ book.ISBN }}</td>
                     <td>{{ data.get_students_count }}</td>
-                    <td>{{ book.notice }}</td>
                 </tr>
             {% endfor %}
             </tbody>
