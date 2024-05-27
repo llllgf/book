@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import FileResponse
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
@@ -7,6 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from books.models import Grade, Student, Major, Books
 from manager.plug import getFeedbackList, managerRender, getFeedbackOrder, getFeedbackById
 from util.check_staff import check_staff
+from util.statistics import Grade_Statistics
 
 
 # Create your views here.
@@ -15,6 +17,10 @@ from util.check_staff import check_staff
 @login_required(login_url='/login')
 @check_staff
 def home(request):
+    if request.method == 'POST':
+        return redirect(
+            '/manager/export/1?search_type=' + request.POST.get('search_type') + '&search=' + request.POST.get(
+                'search'))
     return managerRender(request, 'manager_index.html')
 
 
@@ -76,9 +82,12 @@ def grade_all(request, page):
     paginator = Paginator(grades, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    total_pages = paginator.num_pages
     return managerRender(request, 'grade_all.html', {"grades": paginator.get_page(page),
                                                      'l': l,
-                                                     'r': r})
+                                                     'r': r,
+                                                     'total_pages': total_pages,
+                                                     'current_page': page})
 
 
 @login_required(login_url='/login')
@@ -109,9 +118,12 @@ def students_all(request, page):
     paginator = Paginator(students, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    total_pages = paginator.num_pages
     return managerRender(request, 'students_all.html', {'students': paginator.get_page(page),
                                                         'l': l,
-                                                        'r': r})
+                                                        'r': r,
+                                                        'total_pages': total_pages,
+                                                        'current_page': page})
 
 
 @login_required(login_url='/login')
@@ -186,9 +198,12 @@ def book_all(request, page):
     paginator = Paginator(books, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    total_pages = paginator.num_pages
     return managerRender(request, 'book_all.html', {"books": paginator.get_page(page),
                                                     'l': l,
-                                                    'r': r})
+                                                    'r': r,
+                                                    'total_pages': total_pages,
+                                                    'current_page': page})
 
 
 @login_required(login_url='/login')
@@ -224,3 +239,47 @@ def edit_book(request, id):
         return redirect('/manager/book_all/1')
     book = Books.objects.get(id=id)
     return managerRender(request, 'edit_book.html', {'book': book})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def export(request, page):
+    try:
+        search_type = request.GET.get('search_type')
+        search = request.GET.get('search')
+        if search_type == 'name':
+            grades = Grade.objects.filter(name__contains=search)
+        else:
+            grades = Grade.objects.all()
+        if search == '':
+            grades = Grade.objects.all()
+    except:
+        grades = Grade.objects.all()
+    for i in range(len(grades)):
+        grades[i].nums = len(Student.objects.filter(grade=grades[i]))
+    paginator = Paginator(grades, 5)
+    l = page - 1 if page - 1 > 0 else 1
+    r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
+    total_pages = paginator.num_pages
+    return managerRender(request, 'export.html', {"grades": paginator.get_page(page),
+                                                  'l': l,
+                                                  'r': r,
+                                                  'total_pages': total_pages,
+                                                  'current_page': page})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def export_grade(request):
+    grade = Grade_Statistics(int(request.GET.get('semester', 1)), request.GET.get('semester', "0"))
+    return managerRender(request, 'export_grade.html', {'data': grade})
+
+
+@login_required(login_url='/login')
+@check_staff
+@csrf_protect
+def export_download(request):
+    grade = Grade_Statistics(int(request.GET.get('semester', 1)))
+    return FileResponse(open(grade.csv(),"rb+"), as_attachment=True, filename='books.csv')

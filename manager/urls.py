@@ -19,4 +19,7 @@ urlpatterns = [
     path('book_all/<int:page>', book_all),
     path('add_book/', add_book),
     path('edit_book/<int:id>', edit_book),
+    path('export/<int:page>', export),
+    path('export/grade/', export_grade),
+    path('export/download/', export_download),
 ]

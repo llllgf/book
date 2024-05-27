@@ -1,13 +1,6 @@
 {% extends 'manager_left.html' %}
 {% block right %}
 <style>
-    .feedback {
-        background-color: #ffffff;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
 
     .feedback hr {
         margin-top: 10px;
@@ -23,42 +16,6 @@
 
     a:hover {
         text-decoration: underline;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 400px;
-        border-radius: 5px;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
     }
 
     table {
@@ -121,8 +78,7 @@
     }
 
     .pagination .current-page {
-        background-color: #3ba1df;
-        color: #fff;
+        color: #3ba1df;
         border: none;
     }
 

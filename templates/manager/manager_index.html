@@ -3,33 +3,186 @@
 
 {% block right %}
 
-<style>
-    body {
-        font-family: 'Noto Sans', sans-serif;
-        overflow: hidden;
-        color: #333;
-    }
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            overflow: hidden;
+            color: #333;
+        }
 
-    .sin, .handbook {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin: 20px auto;
-        padding: 20px;
-        width: 90%;
-        max-width: 1200px;
-    }
+        .sin, .handbook {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+        }
 
 
-</style>
+        .feedback hr {
+            margin-top: 10px;
+            border: none;
+            height: 1px;
+            background-color: #eee;
+        }
 
-<div>
-    <div class="sin">
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
 
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3ba1df;
+            color: #fff;
+        }
+
+        form {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="submit"], .custom-button, .custom-select {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"], .custom-button {
+            width: 85px;
+            background-color: #3ba1df;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+            background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"><path d="M12 6L8 10 4 6z"/></svg>') no-repeat right 10px center;
+        }
+
+        .pagination a {
+            padding: 10px 15px;
+            margin: 0 7px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        .pagination .current-page {
+            color: #3ba1df;
+            border: none;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 下拉列表样式 */
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+        }
+
+        #search_types {
+            position: absolute;
+            top: 90px; /* 显示在搜索方式输入框下方 */
+            left: 92px;
+            width: calc(100% - 2px); /* 宽度与输入框相同，减去边框宽度 */
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            z-index: 1000;
+            display: none; /* 默认隐藏 */
+        }
+
+        #search_types option {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #search_types option:hover {
+            background-color: #f1f1f1;
+        }
+
+
+    </style>
+
+    <div>
+        <div class="sin">
+            <div class="container">
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="search_type">搜索方式:</label>
+                    <input type="text" id="search_type" name="search_type" list="search_types" class="custom-select">
+                    <datalist id="search_types">
+                        <option value="name">名称</option>
+                    </datalist>
+                    <label for="search"></label>
+                    <input type="text" id="search" name="search" required>
+                    <input type="submit" value="搜索">
+                </form>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const searchTypeInput = document.getElementById('search_type');
+                    const searchTypeList = document.getElementById('search_types');
+
+                    // 当选择搜索类型时，显示浮窗
+                    searchTypeInput.addEventListener('focus', (event) => {
+                        searchTypeList.style.display = 'block';
+                        searchTypeList.style.width = `${searchTypeInput.offsetWidth}px`;
+                    });
+
+                    // 当离开搜索类型输入框时，隐藏浮窗
+                    searchTypeInput.addEventListener('blur', (event) => {
+                        setTimeout(() => {
+                            searchTypeList.style.display = 'none';
+                        }, 200); // 延迟以允许点击选项
+                    });
+
+                    // 点击下拉选项时设置输入框值
+                    searchTypeList.addEventListener('click', (event) => {
+                        if (event.target.tagName === 'OPTION') {
+                            searchTypeInput.value = event.target.value;
+                            searchTypeList.style.display = 'none';
+                        }
+                    });
+                });
+            </script>
+        </div>
+
+        <div class="handbook">
+        </div>
     </div>
-
-    <div class="handbook">
-    </div>
-</div>
 
 {% endblock %}
