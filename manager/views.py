@@ -73,7 +73,7 @@ def grade_all(request, page):
         grades = Grade.objects.all()
     for i in range(len(grades)):
         grades[i].nums = len(Student.objects.filter(grade=grades[i]))
-    paginator = Paginator(grades, 10)
+    paginator = Paginator(grades, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
     return managerRender(request, 'grade_all.html', {"grades": paginator.get_page(page),
@@ -106,7 +106,7 @@ def students_all(request, page):
             students = Student.objects.all()
     except:
         students = Student.objects.all()
-    paginator = Paginator(students, 10)
+    paginator = Paginator(students, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
     return managerRender(request, 'students_all.html', {'students': paginator.get_page(page),
@@ -183,7 +183,7 @@ def book_all(request, page):
             books = Books.objects.all()
     except:
         books = Books.objects.all()
-    paginator = Paginator(books, 10)
+    paginator = Paginator(books, 5)
     l = page - 1 if page - 1 > 0 else 1
     r = page + 1 if page + 1 <= paginator.num_pages else paginator.num_pages
     return managerRender(request, 'book_all.html', {"books": paginator.get_page(page),
@@ -223,5 +223,4 @@ def edit_book(request, id):
         book.save()
         return redirect('/manager/book_all/1')
     book = Books.objects.get(id=id)
-
     return managerRender(request, 'edit_book.html', {'book': book})

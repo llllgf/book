@@ -23,7 +23,7 @@
             margin-top: 20px;
         }
 
-        input[type="text"], input[type="submit"] {
+        input[type="text"], input[type="submit"], select {
             padding: 10px;
             margin-right: 10px;
             border-radius: 4px;
@@ -38,8 +38,8 @@
             border: none;
         }
 
-        input[type="text"] {
-            width: calc(100% - 132px);
+        input[type="text"], select {
+            width: 200px;
         }
 
         .Price {
@@ -48,24 +48,49 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
             padding: 20px;
+            width: 350px;
         }
 
+        .form-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group label {
+            min-width: 65px;
+            text-align: right;
+            margin-right: 10px;
+        }
     </style>
-    <form method="post">
-        {% csrf_token %}
-        <label for="name">班级名称:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="major">专业:</label>
-        <select id="major" name="major">
-            {% for major in major_list %}
-                <option value="{{ major.id }}">{{ major.name }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="notice">备注:</label>
-        <input type="text" id="notice" name="notice">
-        <br>
-        <input type="submit" value="提交">
-    </form>
+    <div class="Price">
+        <h2>添加班级</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">名称：</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="major">专业：</label>
+                <select id="major" name="major">
+                    {% for major in major_list %}
+                        <option value="{{ major.id }}">{{ major.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="notice">备注：</label>
+                <input type="text" id="notice" name="notice">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="添加">
+            </div>
+        </form>
+    </div>
 {% endblock %}

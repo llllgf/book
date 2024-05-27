@@ -1,99 +1,229 @@
 {% extends 'manager_left.html' %}
 {% block right %}
-    <style>
-        .feedback {
-            background-color: #ffffff;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+<style>
+    .feedback {
+        background-color: #ffffff;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        .feedback hr {
-            margin-top: 10px;
-            border: none;
-            height: 1px;
-            background-color: #eee;
-        }
+    .feedback hr {
+        margin-top: 10px;
+        border: none;
+        height: 1px;
+        background-color: #eee;
+    }
 
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
+    a:hover {
+        text-decoration: underline;
+    }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 5px;
-        }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 5px;
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #3ba1df;
+        color: #fff;
+    }
+
+    form {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    input[type="text"], input[type="submit"], .custom-button, .custom-select {
+        padding: 10px;
+        margin-right: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    input[type="submit"], .custom-button {
+        width: 85px;
+        background-color: #3ba1df;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+    }
+    .custom-select {
+        position: relative;
+        display: inline-block;
+        width: 160px;
+        background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"><path d="M12 6L8 10 4 6z"/></svg>') no-repeat right 10px center;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        padding: 10px 15px;
+        margin: 0 7px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+    }
+
+    .pagination a:hover {
+        background-color: #ddd;
+    }
+
+    .pagination .current-page {
+        background-color: #3ba1df;
+        color: #fff;
+        border: none;
+    }
+
+    .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 下拉列表样式 */
+    .custom-select {
+        position: relative;
+        display: inline-block;
+        width: 160px;
+    }
+
+    #search_types {
+        position: absolute;
+        top: 90px; /* 显示在搜索方式输入框下方 */
+        left: 92px;
+        width: calc(100% - 2px); /* 宽度与输入框相同，减去边框宽度 */
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        z-index: 1000;
+        display: none; /* 默认隐藏 */
+    }
+
+    #search_types option {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    #search_types option:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+<div class="container">
     <form method="get">
-
         <label for="search_type">搜索方式:</label>
-        <select id="search_type" name="search_type">
+        <input type="text" id="search_type" name="search_type" list="search_types" class="custom-select">
+        <datalist id="search_types">
             <option value="name">名称</option>
-        </select>
+        </datalist>
         <label for="search"></label>
         <input type="text" id="search" name="search" required>
         <input type="submit" value="搜索">
+        <a href="../add_grade" class="custom-button">添加班级</a>
     </form>
-    <a class="nav-link" href="../add_grade">添加班级</a>
-    <table style="width:100%; border-collapse: collapse; background-color: #f9f9f9;">
+    <table>
         <thead>
-        <tr style="background-color: #007bff; color: #fff;">
-            <th style="border: 1px solid #ddd; padding: 12px;">班级</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">专业</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">人数</th>
-            <th style="border: 1px solid #ddd; padding: 12px;">备注</th>
+        <tr>
+            <th>班级</th>
+            <th>专业</th>
+            <th>人数</th>
+            <th>备注</th>
         </tr>
         </thead>
         <tbody>
         {% for grade in grades %}
             <tr>
-                <td style="border: 1px solid #ddd; padding: 12px;">
-                    <a class="nav-link" href="/manager/grade_about/{{ grade.id }}">{{ grade.name }}</a>
-                </td>
-                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.major }}</td>
-                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.nums }}</td>
-                <td style="border: 1px solid #ddd; padding: 12px;">{{ grade.notice }}</td>
+                <td><a class="nav-link" href="/manager/grade_about/{{ grade.id }}">{{ grade.name }}</a></td>
+                <td>{{ grade.major }}</td>
+                <td>{{ grade.nums }}</td>
+                <td>{{ grade.notice }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <a class="nav-link" href="./{{ l }}?{{ request.GET.urlencode }}">上一页</a>
-    <a class="nav-link" href="./{{ r }}?{{ request.GET.urlencode }}">下一页</a>
+    <div class="pagination">
+        <a href="./{{ l }}?{{ request.GET.urlencode }}">上一页</a>
+        <span>第 <span class="current-page">{{ current_page }}</span> 页，共 {{ total_pages }} 页</span>
+        <a href="./{{ r }}?{{ request.GET.urlencode }}">下一页</a>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const searchTypeInput = document.getElementById('search_type');
+        const searchTypeList = document.getElementById('search_types');
+
+        // 当选择搜索类型时，显示浮窗
+        searchTypeInput.addEventListener('focus', (event) => {
+            searchTypeList.style.display = 'block';
+            searchTypeList.style.width = `${searchTypeInput.offsetWidth}px`;
+        });
+
+        // 当离开搜索类型输入框时，隐藏浮窗
+        searchTypeInput.addEventListener('blur', (event) => {
+            setTimeout(() => {
+                searchTypeList.style.display = 'none';
+            }, 200); // 延迟以允许点击选项
+        });
+
+        // 点击下拉选项时设置输入框值
+        searchTypeList.addEventListener('click', (event) => {
+            if (event.target.tagName === 'OPTION') {
+                searchTypeInput.value = event.target.value;
+                searchTypeList.style.display = 'none';
+            }
+        });
+    });
+</script>
 {% endblock %}

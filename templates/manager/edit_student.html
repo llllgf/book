@@ -23,7 +23,7 @@
             margin-top: 20px;
         }
 
-        input[type="text"], input[type="submit"] {
+        input[type="text"], input[type="submit"], select {
             padding: 10px;
             margin-right: 10px;
             border-radius: 4px;
@@ -38,8 +38,8 @@
             border: none;
         }
 
-        input[type="text"] {
-            width: calc(100% - 132px);
+        input[type="text"], select {
+            width: 200px;
         }
 
         .Price {
@@ -48,29 +48,55 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
             padding: 20px;
+            width: 350px;
         }
 
+        .form-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group label {
+            min-width: 65px;
+            text-align: right;
+            margin-right: 10px;
+        }
     </style>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{ student.id }}">
-        <label for="name">学生姓名:</label>
-        <input type="text" id="name" name="name" value="{{ student.name }}" required>
-        <br>
-        <label for="student_id">学号:</label>
-        <input type="text" id="student_id" name="student_id" value="{{ student.student_id }}" required>
-        <br>
-        <label for="grade">班级:</label>
-        <select id="grade" name="grade" >
-            <option value="{{ student.grade.id }}" selected>{{ student.grade.name }}</option>
-            {% for grade in grade_list %}
-                <option value="{{ grade.id }}">{{ grade.name }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="notice">备注:</label>
-        <input type="text" id="notice" name="notice" value="{{ student.notice }}">
-        <br>
-        <input type="submit" value="提交">
-    </form>
+    <div class="Price">
+        <h2>编辑学生信息</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ student.id }}">
+            <div class="form-group">
+                <label for="name">姓名：</label>
+                <input type="text" id="name" name="name" value="{{ student.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="student_id">学号：</label>
+                <input type="text" id="student_id" name="student_id" value="{{ student.student_id }}" required>
+            </div>
+            <div class="form-group">
+                <label for="grade">班级：</label>
+                <select id="grade" name="grade">
+                    <option value="{{ student.grade.id }}" selected>{{ student.grade.name }}</option>
+                    {% for grade in grade_list %}
+                        <option value="{{ grade.id }}">{{ grade.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="notice">备注：</label>
+                <input type="text" id="notice" name="notice" value="{{ student.notice }}">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="提交">
+            </div>
+        </form>
+    </div>
 {% endblock %}
